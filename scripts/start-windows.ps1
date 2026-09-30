@@ -42,12 +42,30 @@ if (-not (Test-Node)) {
   Update-Path
 }
 
-# Google Cloud CLI (the Windows installer includes its own Python)
+# Google Cloud CLI. Unzips Google's ready-to-run archive (Python included) rather than running the
+# regular installer, which spends 10+ minutes on Windows setting up and compiling ~30,000 files.
 if (-not (Test-Command gcloud)) {
-  Step 'Installing the Google Cloud CLI (this takes a few minutes)...'
-  Invoke-WebRequest -UseBasicParsing 'https://dl.google.com/dl/cloudsdk/channels/rapid/GoogleCloudSDKInstaller.exe' -OutFile "$tmp\gcloud-installer.exe"
-  $install = Start-Process "$tmp\gcloud-installer.exe" -ArgumentList '/S', '/singleuser', '/noreporting', '/nostartmenu', '/nodesktop' -Wait -PassThru
-  if ($install.ExitCode -ne 0) { throw "Google Cloud CLI installer failed (exit code $($install.ExitCode))" }
+  Step 'Installing the Google Cloud CLI...'
+  $arch = if ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64') { 'arm' } else { 'x86_64' }
+  $zip = "$tmp\gcloud.zip"
+  Invoke-WebRequest -UseBasicParsing "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-windows-$arch-bundled-python.zip" -OutFile $zip
+
+  $root = "$env:LOCALAPPDATA\Google\Cloud SDK"
+  New-Item -ItemType Directory -Force $root | Out-Null
+  if (Test-Command tar.exe) {
+    & tar.exe -xf $zip -C $root
+    if ($LASTEXITCODE -ne 0) { throw 'Unzipping the Google Cloud CLI failed.' }
+  } else {
+    Expand-Archive $zip -DestinationPath $root -Force
+  }
+  Remove-Item $zip
+
+  # Add gcloud to PATH for new windows too
+  $bin = "$root\google-cloud-sdk\bin"
+  $userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
+  if (($userPath -split ';') -notcontains $bin) {
+    [Environment]::SetEnvironmentVariable('Path', "$userPath;$bin".TrimStart(';'), 'User')
+  }
   Update-Path
   if (-not (Test-Command gcloud)) { throw 'The Google Cloud CLI installed but gcloud could not be found. Run start-windows.bat again.' }
 }
