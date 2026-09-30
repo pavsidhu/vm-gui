@@ -62,7 +62,7 @@ fi
 
 # Google Cloud sign-in
 if [ -z "$(gcloud auth list --filter=status:ACTIVE --format='value(account)' 2>/dev/null)" ]; then
-  step "Sign in to Google Cloud in the browser window that opens…"
+  step "Sign in to Google Cloud in your browser. If no browser window appears, copy the link below into a browser on this Mac."
   gcloud auth login --brief
 fi
 

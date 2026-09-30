@@ -75,7 +75,7 @@ $ErrorActionPreference = 'Continue'
 $accounts = (& gcloud auth list --format=json 2>$null) -join "`n" | ConvertFrom-Json
 $ErrorActionPreference = 'Stop'
 if (-not ($accounts | Where-Object { $_.status -eq 'ACTIVE' })) {
-  Step 'Sign in to Google Cloud in the browser window that opens...'
+  Step 'Sign in to Google Cloud in your browser. If no browser window appears, check the taskbar, or Ctrl+click the link below (or copy it into a browser on this computer).'
   & gcloud auth login --brief
   if ($LASTEXITCODE -ne 0) { throw 'Google Cloud sign-in failed.' }
 }
