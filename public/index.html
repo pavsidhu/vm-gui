@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>VM GUI</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script type="module" src="/app.js"></script>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>VM GUI</h1>
+        <p id="account" class="muted"></p>
+      </header>
+
+      <div id="notice" class="notice" hidden></div>
+
+      <section class="card">
+        <div class="section-head">
+          <label for="project">Google Cloud project</label>
+          <button id="new-project-toggle" class="ghost" type="button">New project</button>
+        </div>
+        <select id="project" disabled>
+          <option>Loading projects…</option>
+        </select>
+
+        <form id="new-project" class="new-project" hidden>
+          <div id="billing-field" hidden>
+            <label for="billing-account">Billing account</label>
+            <select id="billing-account"></select>
+          </div>
+          <label for="project-name">New project name</label>
+          <div class="row">
+            <input id="project-name" placeholder="e.g. Alex Desktops" autocomplete="off" maxlength="30" required />
+            <button type="submit" class="primary">Create project</button>
+          </div>
+          <p id="new-project-status" class="hint"></p>
+        </form>
+      </section>
+
+      <section class="card">
+        <form id="create">
+          <label for="name">New desktop</label>
+          <div class="row">
+            <input
+              id="name"
+              name="name"
+              placeholder="e.g. alex-desktop"
+              autocomplete="off"
+              spellcheck="false"
+              maxlength="63"
+              required
+            />
+            <button type="submit" class="primary">Create</button>
+          </div>
+          <p class="hint">Windows Server 2025 · e2-standard-2 (2 vCPU, 8 GB) · London · Chrome installed</p>
+        </form>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <h2>Desktops</h2>
+          <button id="refresh" class="ghost" type="button">Refresh</button>
+        </div>
+        <div id="desktops"></div>
+      </section>
+    </main>
+
+    <div id="toasts" aria-live="polite"></div>
+  </body>
+</html>

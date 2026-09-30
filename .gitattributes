@@ -1,0 +1,4 @@
+# Keep Windows batch files' CRLF line endings exactly as committed, including in GitHub downloads
+*.bat -text
+*.command text eol=lf
+*.sh text eol=lf

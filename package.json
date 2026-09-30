@@ -1,0 +1,12 @@
+{
+  "name": "vm-gui",
+  "private": true,
+  "description": "Create, start, stop, delete and remote into Windows VMs on Google Cloud",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node server.js"
+  }
+}
